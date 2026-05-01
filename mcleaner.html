@@ -151,15 +151,28 @@
             </div>
         </section>
 
-        <!-- Pack.mcmeta Generator Section -->
+        <!-- Pack.mcmeta Updater Section -->
         <section class="converter-section">
             <div class="container">
-                <h2 class="section-title">Pack.mcmeta Generator</h2>
-                <p class="section-subtitle">Generate pack.mcmeta files for any Minecraft version</p>
+                <h2 class="section-title">Pack.mcmeta Updater</h2>
+                <p class="section-subtitle">Update pack format in existing packs</p>
                 
                 <div class="tool-card">
+                    <div class="drop-zone" id="mcmetaDropZone">
+                        <input type="file" id="mcmetaFileInput" accept=".zip" style="display: none;">
+                        <div class="drop-content">
+                            <span class="drop-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                                </svg>
+                            </span>
+                            <p id="mcmetaFileName">Drop pack to update</p>
+                            <p class="drop-hint">.zip files only</p>
+                        </div>
+                    </div>
+                    
                     <div class="converter-options">
-                        <label>Pack Format</label>
+                        <label>Target Pack Format</label>
                         <select id="mcmetaFormat" class="version-select">
                             <option value="1">1 - 1.6-1.8</option>
                             <option value="2">2 - 1.9-1.10</option>
@@ -183,19 +196,14 @@
                         </select>
                     </div>
                     
-                    <div class="converter-options">
-                        <label>Pack Description</label>
-                        <input type="text" id="mcmetaDescription" class="search-input" placeholder="My Texture Pack" value="My Texture Pack">
-                    </div>
-                    
-                    <button id="generateMcmetaBtn" class="btn btn-primary btn-large">Generate pack.mcmeta</button>
+                    <button id="updateMcmetaBtn" class="btn btn-primary btn-large" disabled>Update Pack Format</button>
                     
                     <div id="mcmetaResults" class="results" style="display: none;">
-                        <h3>Generated</h3>
-                        <div class="removed-list">
-                            <pre id="mcmetaPreview" style="font-family: monospace; font-size: 0.875rem; color: var(--text-2); white-space: pre-wrap;"></pre>
-                        </div>
-                        <button id="downloadMcmetaBtn" class="btn btn-accent btn-large">Download pack.mcmeta</button>
+                        <h3>Updated</h3>
+                        <p class="conversion-info">
+                            Pack format updated to <span id="updatedFormat">34</span>
+                        </p>
+                        <button id="downloadUpdatedBtn" class="btn btn-accent btn-large">Download</button>
                     </div>
                 </div>
             </div>

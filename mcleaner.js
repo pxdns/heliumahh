@@ -445,32 +445,111 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // ========== PACK.MCMETA GENERATOR ==========
-    const generateMcmetaBtn = document.getElementById('generateMcmetaBtn');
-    const downloadMcmetaBtn = document.getElementById('downloadMcmetaBtn');
-    let mcmetaBlob = null;
+    // ========== PACK.MCMETA UPDATER ==========
+    const mcmetaDropZone = document.getElementById('mcmetaDropZone');
+    const mcmetaFileInput = document.getElementById('mcmetaFileInput');
+    const updateMcmetaBtn = document.getElementById('updateMcmetaBtn');
+    let mcmetaFile = null;
+    let updatedMcmetaBlob = null;
     
-    generateMcmetaBtn.addEventListener('click', () => {
-        const format = parseInt(document.getElementById('mcmetaFormat').value);
-        const description = document.getElementById('mcmetaDescription').value || 'My Texture Pack';
-        
-        const mcmeta = {
-            pack: {
-                pack_format: format,
-                description: description
-            }
-        };
-        
-        const mcmetaJSON = JSON.stringify(mcmeta, null, 2);
-        mcmetaBlob = new Blob([mcmetaJSON], { type: 'application/json' });
-        
-        document.getElementById('mcmetaPreview').textContent = mcmetaJSON;
-        document.getElementById('mcmetaResults').style.display = 'block';
+    // Drop zone events
+    mcmetaDropZone.addEventListener('click', () => mcmetaFileInput.click());
+    
+    mcmetaDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        mcmetaDropZone.classList.add('dragover');
     });
     
-    downloadMcmetaBtn.addEventListener('click', () => {
-        if (mcmetaBlob) {
-            saveAs(mcmetaBlob, 'pack.mcmeta');
+    mcmetaDropZone.addEventListener('dragleave', () => {
+        mcmetaDropZone.classList.remove('dragover');
+    });
+    
+    mcmetaDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        mcmetaDropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            mcmetaFile = e.dataTransfer.files[0];
+            document.getElementById('mcmetaFileName').textContent = mcmetaFile.name;
+            updateMcmetaBtn.disabled = false;
+        }
+    });
+    
+    mcmetaFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            mcmetaFile = e.target.files[0];
+            document.getElementById('mcmetaFileName').textContent = mcmetaFile.name;
+            updateMcmetaBtn.disabled = false;
+        }
+    });
+    
+    // Update button
+    updateMcmetaBtn.addEventListener('click', async () => {
+        if (!mcmetaFile) return;
+        
+        updateMcmetaBtn.textContent = 'Updating...';
+        updateMcmetaBtn.disabled = true;
+        
+        try {
+            const format = parseInt(document.getElementById('mcmetaFormat').value);
+            
+            // Load the zip
+            const zip = await JSZip.loadAsync(mcmetaFile);
+            
+            // Find and update pack.mcmeta
+            let packMcmeta = zip.file('pack.mcmeta');
+            let mcmeta = {};
+            
+            if (packMcmeta) {
+                try {
+                    const content = await packMcmeta.async('string');
+                    mcmeta = JSON.parse(content);
+                } catch (e) {
+                    console.error('Error parsing pack.mcmeta:', e);
+                    mcmeta = { pack: {} };
+                }
+            } else {
+                // Create new pack.mcmeta if it doesn't exist
+                mcmeta = { pack: {} };
+            }
+            
+            // Update ONLY the pack_format
+            if (!mcmeta.pack) {
+                mcmeta.pack = {};
+            }
+            mcmeta.pack.pack_format = format;
+            
+            // If no description exists, add a default one
+            if (!mcmeta.pack.description) {
+                mcmeta.pack.description = 'Minecraft Resource Pack';
+            }
+            
+            // Write updated pack.mcmeta back to zip
+            zip.file('pack.mcmeta', JSON.stringify(mcmeta, null, 2));
+            
+            // Generate updated pack
+            updatedMcmetaBlob = await zip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 9 }
+            });
+            
+            document.getElementById('updatedFormat').textContent = format;
+            document.getElementById('mcmetaResults').style.display = 'block';
+            
+        } catch (error) {
+            console.error('Update error:', error);
+            alert('Error updating pack: ' + error.message);
+        }
+        
+        updateMcmetaBtn.innerHTML = 'Update Pack Format';
+        updateMcmetaBtn.disabled = false;
+    });
+    
+    // Download updated pack
+    document.getElementById('downloadUpdatedBtn').addEventListener('click', () => {
+        if (updatedMcmetaBlob && mcmetaFile) {
+            const newName = mcmetaFile.name.replace('.zip', '') + '_updated.zip';
+            saveAs(updatedMcmetaBlob, newName);
         }
     });
 });
