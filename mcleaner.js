@@ -444,6 +444,35 @@ document.addEventListener('DOMContentLoaded', function() {
             saveAs(convertedPackBlob, newName);
         }
     });
+    
+    // ========== PACK.MCMETA GENERATOR ==========
+    const generateMcmetaBtn = document.getElementById('generateMcmetaBtn');
+    const downloadMcmetaBtn = document.getElementById('downloadMcmetaBtn');
+    let mcmetaBlob = null;
+    
+    generateMcmetaBtn.addEventListener('click', () => {
+        const format = parseInt(document.getElementById('mcmetaFormat').value);
+        const description = document.getElementById('mcmetaDescription').value || 'My Texture Pack';
+        
+        const mcmeta = {
+            pack: {
+                pack_format: format,
+                description: description
+            }
+        };
+        
+        const mcmetaJSON = JSON.stringify(mcmeta, null, 2);
+        mcmetaBlob = new Blob([mcmetaJSON], { type: 'application/json' });
+        
+        document.getElementById('mcmetaPreview').textContent = mcmetaJSON;
+        document.getElementById('mcmetaResults').style.display = 'block';
+    });
+    
+    downloadMcmetaBtn.addEventListener('click', () => {
+        if (mcmetaBlob) {
+            saveAs(mcmetaBlob, 'pack.mcmeta');
+        }
+    });
 });
 
 // Smooth scroll

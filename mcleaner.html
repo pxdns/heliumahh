@@ -150,6 +150,56 @@
                 </div>
             </div>
         </section>
+
+        <!-- Pack.mcmeta Generator Section -->
+        <section class="converter-section">
+            <div class="container">
+                <h2 class="section-title">Pack.mcmeta Generator</h2>
+                <p class="section-subtitle">Generate pack.mcmeta files for any Minecraft version</p>
+                
+                <div class="tool-card">
+                    <div class="converter-options">
+                        <label>Pack Format</label>
+                        <select id="mcmetaFormat" class="version-select">
+                            <option value="1">1 - 1.6-1.8</option>
+                            <option value="2">2 - 1.9-1.10</option>
+                            <option value="3">3 - 1.11-1.12</option>
+                            <option value="4">4 - 1.13-1.14</option>
+                            <option value="5">5 - 1.15-1.16.1</option>
+                            <option value="6">6 - 1.16.2-1.16.5</option>
+                            <option value="7">7 - 1.17-1.17.1</option>
+                            <option value="8">8 - 1.18-1.18.2</option>
+                            <option value="9">9 - 1.19-1.19.2</option>
+                            <option value="12">12 - 1.19.3</option>
+                            <option value="13">13 - 1.19.4</option>
+                            <option value="15">15 - 1.20-1.20.1</option>
+                            <option value="18">18 - 1.20.2</option>
+                            <option value="22">22 - 1.20.3-1.20.4</option>
+                            <option value="32">32 - 1.20.5-1.20.6</option>
+                            <option value="34" selected>34 - 1.21-1.21.1</option>
+                            <option value="42">42 - 1.21.2-1.21.4</option>
+                            <option value="46">46 - 1.21.3</option>
+                            <option value="55">55 - 1.21.5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="converter-options">
+                        <label>Pack Description</label>
+                        <input type="text" id="mcmetaDescription" class="search-input" placeholder="My Texture Pack" value="My Texture Pack">
+                    </div>
+                    
+                    <button id="generateMcmetaBtn" class="btn btn-primary btn-large">Generate pack.mcmeta</button>
+                    
+                    <div id="mcmetaResults" class="results" style="display: none;">
+                        <h3>Generated</h3>
+                        <div class="removed-list">
+                            <pre id="mcmetaPreview" style="font-family: monospace; font-size: 0.875rem; color: var(--text-2); white-space: pre-wrap;"></pre>
+                        </div>
+                        <button id="downloadMcmetaBtn" class="btn btn-accent btn-large">Download pack.mcmeta</button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
