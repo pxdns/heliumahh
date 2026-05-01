@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCleaner - Ahhydrogen</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">Ahhydrogen</a>
+            <div class="nav-links">
+                <a href="/packs" class="nav-link">Packs</a>
+                <a href="/mcleaner" class="nav-link active">Cleaner</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <!-- Cleaner Section -->
+        <section class="cleaner-section">
+            <div class="container">
+                <h1 class="page-title">MCleaner</h1>
+                <p class="page-subtitle">Advanced macOS pack cleaner with 50+ junk file patterns</p>
+                
+                <div class="tool-card">
+                    <div class="drop-zone" id="cleanerDropZone">
+                        <input type="file" id="cleanerFileInput" accept=".zip" style="display: none;">
+                        <div class="drop-content">
+                            <span class="drop-icon">✨</span>
+                            <p id="cleanerFileName">Drop your pack here or click to browse</p>
+                            <p class="drop-hint">Supports: .zip files</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cleaner-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="aggressiveMode">
+                            <span>Aggressive mode (remove more junk files)</span>
+                        </label>
+                    </div>
+                    
+                    <button id="cleanBtn" class="btn btn-primary btn-large" disabled>
+                        <span class="btn-icon">🧹</span> Clean Pack
+                    </button>
+                    
+                    <!-- Results -->
+                    <div id="cleanerResults" class="results" style="display: none;">
+                        <h3>Cleaning Results</h3>
+                        <div class="result-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="removedFiles">0</span>
+                                <span class="stat-label">Files Removed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sizeBefore">0 MB</span>
+                                <span class="stat-label">Original Size</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sizeAfter">0 MB</span>
+                                <span class="stat-label">Cleaned Size</span>
+                            </div>
+                            <div class="stat highlight">
+                                <span class="stat-value" id="sizeSaved">0%</span>
+                                <span class="stat-label">Space Saved</span>
+                            </div>
+                        </div>
+                        <div id="removedList" class="removed-list"></div>
+                        <button id="downloadCleanedBtn" class="btn btn-accent btn-large">
+                            <span class="btn-icon">⬇️</span> Download Cleaned Pack
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Version Converter Section -->
+        <section class="converter-section">
+            <div class="container">
+                <h2 class="section-title">Version Converter</h2>
+                <p class="section-subtitle">Convert your texture pack between Minecraft versions</p>
+                
+                <div class="tool-card">
+                    <div class="drop-zone" id="converterDropZone">
+                        <input type="file" id="converterFileInput" accept=".zip" style="display: none;">
+                        <div class="drop-content">
+                            <span class="drop-icon">🔄</span>
+                            <p id="converterFileName">Drop pack to convert</p>
+                            <p class="drop-hint">Supports: .zip files</p>
+                        </div>
+                    </div>
+                    
+                    <div class="converter-options">
+                        <label>Target Version:</label>
+                        <select id="targetVersion" class="version-select">
+                            <option value="1.8.9">1.8.9 - 1.12.2 (pack format 2)</option>
+                            <option value="1.13">1.13 - 1.14.4 (pack format 4)</option>
+                            <option value="1.15">1.15 - 1.16.1 (pack format 5)</option>
+                            <option value="1.16.2">1.16.2 - 1.16.5 (pack format 5)</option>
+                            <option value="1.17">1.17 - 1.17.1 (pack format 7)</option>
+                            <option value="1.18">1.18 - 1.18.2 (pack format 8)</option>
+                            <option value="1.19">1.19 - 1.19.2 (pack format 9)</option>
+                            <option value="1.19.3">1.19.3 - 1.19.4 (pack format 12-13)</option>
+                            <option value="1.20" selected>1.20 - 1.20.4 (pack format 15)</option>
+                            <option value="1.20.5">1.20.5 - 1.20.6 (pack format 16)</option>
+                            <option value="1.21">1.21 - 1.21.1 (pack format 34)</option>
+                            <option value="1.21.2">1.21.2 - 1.21.4 (pack format 42)</option>
+                        </select>
+                    </div>
+                    
+                    <button id="convertBtn" class="btn btn-primary btn-large" disabled>
+                        <span class="btn-icon">🔄</span> Convert Pack
+                    </button>
+                    
+                    <div id="converterResults" class="results" style="display: none;">
+                        <h3>Conversion Complete</h3>
+                        <p class="conversion-info">
+                            Converted to <span id="convertedVersion">1.20</span> 
+                            (pack format <span id="packFormat">15</span>)
+                        </p>
+                        <button id="downloadConvertedBtn" class="btn btn-accent btn-large">
+                            <span class="btn-icon">⬇️</span> Download Converted Pack
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Ahhydrogen. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="mcleaner.js"></script>
+</body>
+</html>

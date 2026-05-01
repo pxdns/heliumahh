@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packs - Ahhydrogen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">Ahhydrogen</a>
+            <div class="nav-links">
+                <a href="/packs" class="nav-link active">Packs</a>
+                <a href="/mcleaner" class="nav-link">Cleaner</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container">
+            <h1 class="page-title">Texture Pack Downloads</h1>
+            
+            <!-- Search -->
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search packs by name, tag, or description...">
+                <button id="searchBtn" class="btn btn-primary">Search</button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="16x">16x</button>
+                <button class="filter-btn" data-filter="32x">32x</button>
+                <button class="filter-btn" data-filter="64x">64x</button>
+                <button class="filter-btn" data-filter="pvp">PvP</button>
+                <button class="filter-btn" data-filter="survival">Survival</button>
+                <button class="filter-btn" data-filter="faithful">Faithful</button>
+            </div>
+
+            <!-- Results Count -->
+            <div id="resultsCount" class="results-count"></div>
+
+            <!-- Packs Grid -->
+            <div id="packsGrid" class="packs-grid"></div>
+
+            <!-- No Results -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No packs found matching your search.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Ahhydrogen. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="packs.js"></script>
+</body>
+</html>
