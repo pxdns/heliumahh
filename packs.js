@@ -186,16 +186,16 @@ function displayPacks(packs) {
                     ${pack.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                 </div>
                 <div class="pack-meta">
-                    <span class="pack-author">👤 ${pack.author}</span>
-                    <span class="pack-version">📦 ${pack.minecraftVersion}</span>
+                    <span class="pack-author">By: ${pack.author}</span>
+                    <span class="pack-version">MC: ${pack.minecraftVersion}</span>
                 </div>
                 <div class="pack-stats">
-                    <span>⬇️ ${formatNumber(pack.downloads)}</span>
+                    <span>Downloads: ${formatNumber(pack.downloads)}</span>
                 </div>
             </div>
             <div class="pack-actions">
                 <button class="btn btn-primary" onclick="downloadPack(${pack.id})">
-                    <span class="btn-icon">⬇️</span> Download
+                    Download
                 </button>
             </div>
         `;

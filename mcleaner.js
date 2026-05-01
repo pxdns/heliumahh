@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
     cleanBtn.addEventListener('click', async () => {
         if (!cleanerFile) return;
         
-        cleanBtn.textContent = '🧹 Cleaning...';
+        cleanBtn.textContent = 'Cleaning...';
         cleanBtn.disabled = true;
         
         try {
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error cleaning pack: ' + error.message);
         }
         
-        cleanBtn.innerHTML = '<span class="btn-icon">🧹</span> Clean Pack';
+        cleanBtn.innerHTML = 'Clean Pack';
         cleanBtn.disabled = false;
     });
     
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
     convertBtn.addEventListener('click', async () => {
         if (!converterFile) return;
         
-        convertBtn.textContent = '🔄 Converting...';
+        convertBtn.textContent = 'Converting...';
         convertBtn.disabled = true;
         
         try {
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error converting pack: ' + error.message);
         }
         
-        convertBtn.innerHTML = '<span class="btn-icon">🔄</span> Convert Pack';
+        convertBtn.innerHTML = 'Convert Pack';
         convertBtn.disabled = false;
     });
     
