@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (convertedPackBlob && converterFile) {
             const version = targetVersion.value;
             const newName = converterFile.name.replace('.zip', '') + '_' + version + '.zip';
-            saveAs(convertedBlob, newName);
+            saveAs(convertedPackBlob, newName);
         }
     });
 });

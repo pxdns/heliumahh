@@ -14,49 +14,46 @@
                 <a href="/packs" class="nav-link active">Packs</a>
                 <a href="/mcleaner" class="nav-link">Cleaner</a>
             </div>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                <span class="icon-moon">🌙</span>
+                <span class="icon-sun">☀️</span>
+            </button>
         </div>
     </nav>
 
     <main class="page-content">
         <div class="container">
-            <h1 class="page-title">Texture Pack Downloads</h1>
+            <div class="page-header">
+                <h1 class="page-title">Texture Packs</h1>
+                <p class="page-subtitle">PvP packs, overlays, and utilities</p>
+            </div>
             
-            <!-- Search -->
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search packs by name, tag, or description...">
-                <button id="searchBtn" class="btn btn-primary">Search</button>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search packs...">
             </div>
 
-            <!-- Filters -->
             <div class="filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="16x">16x</button>
-                <button class="filter-btn" data-filter="32x">32x</button>
-                <button class="filter-btn" data-filter="64x">64x</button>
-                <button class="filter-btn" data-filter="pvp">PvP</button>
-                <button class="filter-btn" data-filter="survival">Survival</button>
-                <button class="filter-btn" data-filter="faithful">Faithful</button>
+                <button class="filter-btn active" data-sort="newest">Newest</button>
+                <button class="filter-btn" data-sort="downloads">Most Downloaded</button>
             </div>
 
-            <!-- Results Count -->
             <div id="resultsCount" class="results-count"></div>
 
-            <!-- Packs Grid -->
             <div id="packsGrid" class="packs-grid"></div>
 
-            <!-- No Results -->
             <div id="noResults" class="no-results" style="display: none;">
-                <p>No packs found matching your search.</p>
+                <p>No packs found.</p>
             </div>
         </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>© 2024 Ahhydrogen. All rights reserved.</p>
+            <p>© 2024 Ahhydrogen</p>
         </div>
     </footer>
 
+    <script src="theme.js"></script>
     <script src="packs.js"></script>
 </body>
 </html>
