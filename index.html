@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pauth - Pack Cleaner & Downloads</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Pauth</a>
+            <div class="nav-links">
+                <a href="#cleaner" class="nav-link">Cleaner</a>
+                <a href="#downloads" class="nav-link">Downloads</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Pack Cleaner & Downloads</h1>
+                <p class="hero-subtitle">Clean your texture packs and download curated packs</p>
+                <div class="hero-buttons">
+                    <a href="#cleaner" class="btn btn-primary btn-large">Clean Pack</a>
+                    <a href="#downloads" class="btn btn-secondary btn-large">Browse Downloads</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cleaner Section -->
+        <section id="cleaner" class="cleaner">
+            <div class="container">
+                <h2 class="section-title">macOS Pack Cleaner</h2>
+                <p class="section-subtitle">Remove junk files and optimize your texture packs</p>
+                <div class="tool-card">
+                    <div class="drop-zone" id="cleanerDropZone">
+                        <input type="file" id="cleanerFileInput" accept=".zip" style="display: none;">
+                        <div class="drop-content">
+                            <span class="drop-icon">✨</span>
+                            <p id="cleanerFileName">Drop your pack here</p>
+                            <p class="drop-hint">Supports: .zip files</p>
+                        </div>
+                    </div>
+                    <button id="cleanBtn" class="btn btn-primary btn-large" disabled>Clean Pack</button>
+                    <div id="cleanerResults" class="results" style="display: none;">
+                        <div class="result-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="removedFiles">0</span>
+                                <span class="stat-label">Files Removed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sizeSaved">0%</span>
+                                <span class="stat-label">Size Saved</span>
+                            </div>
+                        </div>
+                        <button id="downloadCleanedBtn" class="btn btn-secondary btn-large">Download Cleaned Pack</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Downloads Section -->
+        <section id="downloads" class="downloads">
+            <div class="container">
+                <h2 class="section-title">Pack Downloads</h2>
+                <p class="section-subtitle">Curated texture packs ready to download</p>
+                <div id="packsGrid" class="packs-grid">
+                    <!-- Packs will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pauth</h3>
+                    <p>Simple pack cleaner and downloads.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Pauth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
