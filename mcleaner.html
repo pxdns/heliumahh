@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Docs</title>
-    <link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico">
+    <title>Cleaner — helium</title>
+    <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="vendor/jszip.min.js"></script>
+    <script src="vendor/FileSaver.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -29,6 +29,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 0 0 2.25 2.25h13.5A2.25 2.25 0 0 0 21 18V8.25m-18 0V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6ZM7.5 6h.008v.008H7.5V6Zm2.25 0h.008v.008H9.75V6Z" />
                     </svg>
                     Cleaner
+                </a>
+                <a href="/converter" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+                    </svg>
+                    Converter
                 </a>
             </div>
             <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -102,108 +108,16 @@
 
         <section class="converter-section">
             <div class="container">
-                <h2 class="section-title">Version Converter</h2>
-                <p class="section-subtitle">Convert packs between Minecraft versions</p>
-                
-                <div class="tool-card">
-                    <div class="drop-zone" id="converterDropZone">
-                        <input type="file" id="converterFileInput" accept=".zip" style="display: none;">
-                        <div class="drop-content">
-                            <span class="drop-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                </svg>
-                            </span>
-                            <p id="converterFileName">Drop pack to convert</p>
-                            <p class="drop-hint">.zip files only</p>
-                        </div>
+                <div class="converter-cta">
+                    <div class="converter-cta-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+                        </svg>
                     </div>
-                    
-                    <div class="converter-options">
-                        <label>Target Version</label>
-                        <select id="targetVersion" class="version-select">
-                            <option value="1.8.9">1.8.9 - 1.12.2 (format 2)</option>
-                            <option value="1.13">1.13 - 1.14.4 (format 4)</option>
-                            <option value="1.15">1.15 - 1.16.1 (format 5)</option>
-                            <option value="1.16.2">1.16.2 - 1.16.5 (format 6)</option>
-                            <option value="1.17">1.17 - 1.17.1 (format 7)</option>
-                            <option value="1.18">1.18 - 1.18.2 (format 8)</option>
-                            <option value="1.19">1.19 - 1.19.2 (format 9)</option>
-                            <option value="1.19.3">1.19.3 - 1.19.4 (format 12-13)</option>
-                            <option value="1.20" selected>1.20 - 1.20.4 (format 15)</option>
-                            <option value="1.20.5">1.20.5 - 1.20.6 (format 16)</option>
-                            <option value="1.21">1.21 - 1.21.1 (format 34)</option>
-                            <option value="1.21.2">1.21.2 - 1.21.4 (format 42)</option>
-                        </select>
-                    </div>
-                    
-                    <button id="convertBtn" class="btn btn-primary btn-large" disabled>Convert</button>
-                    
-                    <div id="converterResults" class="results" style="display: none;">
-                        <h3>Conversion Complete</h3>
-                        <p class="conversion-info">
-                            Converted to <span id="convertedVersion">1.20</span> 
-                            (format <span id="packFormat">15</span>)
-                        </p>
-                        <button id="downloadConvertedBtn" class="btn btn-accent btn-large">Download</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pack.mcmeta Updater Section -->
-        <section class="converter-section">
-            <div class="container">
-                <h2 class="section-title">Pack.mcmeta Updater</h2>
-                <p class="section-subtitle">Update pack format in existing packs</p>
-                
-                <div class="tool-card">
-                    <div class="drop-zone" id="mcmetaDropZone">
-                        <input type="file" id="mcmetaFileInput" accept=".zip" style="display: none;">
-                        <div class="drop-content">
-                            <span class="drop-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                                </svg>
-                            </span>
-                            <p id="mcmetaFileName">Drop pack to update</p>
-                            <p class="drop-hint">.zip files only</p>
-                        </div>
-                    </div>
-                    
-                    <div class="converter-options">
-                        <label>Target Pack Format</label>
-                        <select id="mcmetaFormat" class="version-select">
-                            <option value="1">1 - 1.6-1.8</option>
-                            <option value="2">2 - 1.9-1.10</option>
-                            <option value="3">3 - 1.11-1.12</option>
-                            <option value="4">4 - 1.13-1.14</option>
-                            <option value="5">5 - 1.15-1.16.1</option>
-                            <option value="6">6 - 1.16.2-1.16.5</option>
-                            <option value="7">7 - 1.17-1.17.1</option>
-                            <option value="8">8 - 1.18-1.18.2</option>
-                            <option value="9">9 - 1.19-1.19.2</option>
-                            <option value="12">12 - 1.19.3</option>
-                            <option value="13">13 - 1.19.4</option>
-                            <option value="15">15 - 1.20-1.20.1</option>
-                            <option value="18">18 - 1.20.2</option>
-                            <option value="22">22 - 1.20.3-1.20.4</option>
-                            <option value="32">32 - 1.20.5-1.20.6</option>
-                            <option value="34" selected>34 - 1.21-1.21.1</option>
-                            <option value="42">42 - 1.21.2-1.21.4</option>
-                            <option value="46">46 - 1.21.3</option>
-                            <option value="55">55 - 1.21.5</option>
-                        </select>
-                    </div>
-                    
-                    <button id="updateMcmetaBtn" class="btn btn-primary btn-large" disabled>Update Pack Format</button>
-                    
-                    <div id="mcmetaResults" class="results" style="display: none;">
-                        <h3>Updated</h3>
-                        <p class="conversion-info">
-                            Pack format updated to <span id="updatedFormat">34</span>
-                        </p>
-                        <button id="downloadUpdatedBtn" class="btn btn-accent btn-large">Download</button>
+                    <div>
+                        <h2 class="section-title" style="margin-bottom:0.25rem;">Need to convert or update your pack?</h2>
+                        <p class="section-subtitle" style="margin-bottom:1rem;">Version converter and pack.mcmeta editor are on their own page.</p>
+                        <a href="/converter" class="btn btn-primary">Open Converter</a>
                     </div>
                 </div>
             </div>
