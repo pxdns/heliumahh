@@ -1,0 +1,147 @@
+name: Build macOS App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install dependencies
+      run: npm install -g electron electron-builder
+    
+    - name: Create Electron app structure
+      run: |
+        mkdir -p electron-app
+        cp -r *.html *.js *.css packs electron-app/ 2>/dev/null || true
+        
+    - name: Create package.json
+      run: |
+        cat > electron-app/package.json << 'EOF'
+        {
+          "name": "google-docs",
+          "version": "1.0.0",
+          "description": "Minecraft Pack Tools",
+          "main": "electron-main.js",
+          "scripts": {
+            "start": "electron .",
+            "build": "electron-builder --mac"
+          },
+          "build": {
+            "appId": "com.googledocs.packtools",
+            "productName": "Google Docs",
+            "mac": {
+              "category": "public.app-category.utilities",
+              "icon": "icon.icns",
+              "target": [
+                {
+                  "target": "dmg",
+                  "arch": ["x64", "arm64"]
+                }
+              ]
+            },
+            "dmg": {
+              "title": "Google Docs",
+              "icon": "icon.icns",
+              "window": {
+                "width": 540,
+                "height": 380
+              }
+            },
+            "files": [
+              "**/*",
+              "!node_modules/**/*"
+            ]
+          },
+          "devDependencies": {
+            "electron": "^28.0.0",
+            "electron-builder": "^24.9.1"
+          }
+        }
+        EOF
+    
+    - name: Create Electron main file
+      run: |
+        cat > electron-app/electron-main.js << 'EOF'
+        const { app, BrowserWindow } = require('electron');
+        const path = require('path');
+
+        function createWindow() {
+          const win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            webPreferences: {
+              nodeIntegration: false,
+              contextIsolation: true
+            },
+            titleBarStyle: 'hiddenInset',
+            icon: path.join(__dirname, 'icon.png')
+          });
+
+          win.loadFile('index.html');
+        }
+
+        app.whenReady().then(() => {
+          createWindow();
+
+          app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) {
+              createWindow();
+            }
+          });
+        });
+
+        app.on('window-all-closed', () => {
+          if (process.platform !== 'darwin') {
+            app.quit();
+          }
+        });
+        EOF
+    
+    - name: Create app icon
+      run: |
+        # Create a simple icon (you can replace this with a real icon later)
+        mkdir -p electron-app/icon.iconset
+        # For now, we'll skip icon creation and let electron-builder use default
+        # You can add proper icon files later
+    
+    - name: Install app dependencies
+      working-directory: electron-app
+      run: npm install
+    
+    - name: Build macOS app
+      working-directory: electron-app
+      run: npm run build
+      env:
+        CSC_IDENTITY_AUTO_DISCOVERY: false
+    
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-dmg
+        path: electron-app/dist/*.dmg
+        retention-days: 30
+    
+    - name: Create Release
+      if: github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: Release v1.0.${{ github.run_number }}
+        files: electron-app/dist/*.dmg
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
