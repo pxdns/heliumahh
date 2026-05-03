@@ -74,7 +74,7 @@ jobs:
     - name: Create Electron main file
       run: |
         cat > electron-app/electron-main.js << 'EOF'
-        const { app, BrowserWindow, shell } = require('electron');
+        const { app, BrowserWindow } = require('electron');
         const path = require('path');
 
         function createWindow() {
@@ -96,8 +96,8 @@ jobs:
             
             // Check if it's an external URL
             if (url.startsWith('http://') || url.startsWith('https://')) {
-              // Open external links in default browser
-              shell.openExternal(url);
+              // Load external URLs in the same window
+              win.loadURL(url);
             } else if (url.includes('/packs')) {
               win.loadFile('packs.html');
             } else if (url.includes('/mcleaner')) {
@@ -111,9 +111,9 @@ jobs:
           
           // Handle link clicks
           win.webContents.setWindowOpenHandler(({ url }) => {
-            // Open external links in default browser
+            // Load external links in the same window
             if (url.startsWith('http://') || url.startsWith('https://')) {
-              shell.openExternal(url);
+              win.loadURL(url);
               return { action: 'deny' };
             }
             
