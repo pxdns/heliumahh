@@ -1,80 +1,39 @@
-# Pauth - Static Pack Cleaner & Downloads
+# Google Docs - Minecraft Pack Tools Launcher
 
-A simple static site for cleaning Minecraft texture packs and downloading curated packs. No authentication, no database, no server required.
+A native macOS app for cleaning Minecraft texture packs, converting between versions, and accessing pack resources.
+
+## Download
+
+Download the latest DMG from the [Actions](../../actions) tab (look for the latest successful build and download the `macos-dmg` artifact).
 
 ## Features
 
-✅ **macOS Pack Cleaner** - Remove junk files from texture packs
-✅ **Static Downloads** - Curated pack downloads (add your own URLs)
-✅ **No Authentication** - No accounts or login required
-✅ **Fully Static** - Works on GitHub Pages
-✅ **Client-Side Only** - All processing in browser
+✅ **Pack Cleaner** - Remove junk files (.DS_Store, Thumbs.db, IDE configs, etc.)  
+✅ **Version Converter** - Convert packs between Minecraft versions 1.8.9 to 1.21.4  
+✅ **Pack.mcmeta Updater** - Update pack format for any Minecraft version  
+✅ **Pack Collection** - Browse and download curated texture packs  
+✅ **External Resources** - Quick access to Texture Packs and Shadownnet  
+✅ **Native macOS App** - Built with Electron, works offline  
 
-## Setup
+## Keyboard Shortcuts
 
-1. Add your pack URLs in `app.js` in the `STATIC_PACKS` array
-2. Deploy to GitHub Pages
-3. Done!
+- **⌥B** (Option+B) - Return to home page from anywhere
 
-## Adding Packs
+## Installation
 
-Edit `app.js` and add your packs to the `STATIC_PACKS` array:
+1. Download the DMG file from Actions
+2. Open the DMG
+3. Drag "Google Docs" to Applications
+4. Launch from Applications folder
 
-```javascript
-const STATIC_PACKS = [
-    {
-        name: 'Your Pack Name',
-        description: 'Description of your pack',
-        tags: ['16x', 'pvp', 'clean'],
-        downloads: 0,
-        url: 'https://your-url.com/pack.zip'
-    }
-];
-```
+## Building from Source
 
-## Cleaner Features
+The app is automatically built via GitHub Actions on every push to main. The workflow:
 
-Removes common junk files:
-- .DS_Store (macOS)
-- Thumbs.db (Windows)
-- .git, .svn, .hg folders
-- __MACOSX folders
-- IDE folders (.idea, .vscode)
-- Source files (.java, .class)
-- Design files (.psd, .ai, .blend)
-- Build files and more
-
-## Deployment
-
-### GitHub Pages
-
-1. Push this folder to a GitHub repository
-2. Go to Settings → Pages
-3. Select main branch
-4. Your site is live!
-
-### Other Static Hosting
-
-Works on any static hosting:
-- Netlify
-- Vercel
-- Cloudflare Pages
-- Any web server
-
-## File Structure
-
-```
-pauth-static/
-├── index.html    # Main page
-├── styles.css    # Styles
-├── app.js        # JavaScript
-└── README.md     # This file
-```
-
-## Usage
-
-1. **Clean Pack**: Drop a zip file to remove junk files
-2. **Download Packs**: Browse and download curated packs
+1. Creates an Electron app wrapper
+2. Bundles all HTML/CSS/JS files
+3. Builds DMG for both Intel (x64) and Apple Silicon (arm64)
+4. Uploads artifacts (available for 30 days)
 
 ## License
 
