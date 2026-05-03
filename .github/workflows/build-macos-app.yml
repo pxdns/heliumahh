@@ -89,6 +89,31 @@ jobs:
           });
 
           win.loadFile('index.html');
+          
+          // Handle navigation to other pages
+          win.webContents.on('will-navigate', (event, url) => {
+            event.preventDefault();
+            
+            if (url.includes('/packs')) {
+              win.loadFile('packs.html');
+            } else if (url.includes('/mcleaner')) {
+              win.loadFile('mcleaner.html');
+            } else if (url.includes('/') || url.includes('index')) {
+              win.loadFile('index.html');
+            }
+          });
+          
+          // Handle link clicks
+          win.webContents.setWindowOpenHandler(({ url }) => {
+            if (url.includes('/packs')) {
+              win.loadFile('packs.html');
+            } else if (url.includes('/mcleaner')) {
+              win.loadFile('mcleaner.html');
+            } else if (url.includes('/') || url.includes('index')) {
+              win.loadFile('index.html');
+            }
+            return { action: 'deny' };
+          });
         }
 
         app.whenReady().then(() => {
