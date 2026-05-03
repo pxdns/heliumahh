@@ -149,6 +149,33 @@ a { color: inherit; }
 [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 [data-theme="dark"] .theme-toggle .icon-sun  { display: inline; }
 
+/* Back button */
+.back-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-2);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    flex-shrink: 0;
+}
+
+.back-btn:hover {
+    color: var(--text);
+    border-color: var(--text-2);
+    background: var(--bg-subtle);
+}
+
+.back-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* ── Layout ──────────────────────────────────────────── */
 
 main { padding-top: var(--nav-h); }
