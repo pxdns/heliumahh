@@ -3,23 +3,22 @@
   "version": "1.0.0",
   "description": "Minecraft texture pack tools — cleaner, converter, and pack browser",
   "main": "main.js",
-  "homepage": "./",
   "author": "pxdns",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder --win --mac --linux"
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
   },
   "devDependencies": {
-    "electron": "^31.0.0",
-    "electron-builder": "^24.13.3"
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
   },
   "build": {
     "appId": "com.pxdns.heliumahh",
     "productName": "helium",
+    "icon": "build/icon.png",
     "directories": {
       "output": "dist"
     },
@@ -27,30 +26,25 @@
       "**/*",
       "!.git/**",
       "!.kiro/**",
+      "!.github/**",
       "!node_modules/.cache/**",
-      "!dist/**",
-      "!*.yml",
-      "!*.md"
+      "!dist/**"
     ],
-    "win": {
-      "target": [
-        { "target": "nsis", "arch": ["x64"] }
-      ],
-      "icon": "favicon.svg"
-    },
     "mac": {
       "target": [
         { "target": "dmg", "arch": ["x64", "arm64"] }
       ],
-      "icon": "favicon.svg",
       "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
     },
     "linux": {
       "target": [
-        { "target": "AppImage", "arch": ["x64"] },
-        { "target": "deb", "arch": ["x64"] }
+        { "target": "AppImage", "arch": ["x64"] }
       ],
-      "icon": "favicon.svg",
       "category": "Utility"
     },
     "nsis": {
