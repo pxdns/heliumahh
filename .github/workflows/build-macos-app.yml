@@ -14,21 +14,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Setup Node.js
+    - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: 20
     
-    - name: Install Rust
+    - name: Setup Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         targets: aarch64-apple-darwin,x86_64-apple-darwin
     
-    - name: Install Tauri CLI
-      run: cargo install tauri-cli
-    
     - name: Create Tauri app structure
       run: |
+        # Create directory structure
         mkdir -p tauri-app/src
         mkdir -p tauri-app/src-tauri/src
         
@@ -47,6 +45,9 @@ jobs:
           "description": "Minecraft Pack Tools",
           "scripts": {
             "tauri": "tauri"
+          },
+          "devDependencies": {
+            "@tauri-apps/cli": "^1.5.0"
           }
         }
         EOF
@@ -59,7 +60,8 @@ jobs:
             "beforeDevCommand": "",
             "beforeBuildCommand": "",
             "devPath": "../src",
-            "distDir": "../src"
+            "distDir": "../src",
+            "withGlobalTauri": true
           },
           "package": {
             "productName": "Google Docs",
@@ -71,17 +73,6 @@ jobs:
               "shell": {
                 "all": false,
                 "open": true
-              },
-              "window": {
-                "all": false,
-                "close": true,
-                "hide": true,
-                "show": true,
-                "maximize": true,
-                "minimize": true,
-                "unmaximize": true,
-                "unminimize": true,
-                "startDragging": true
               }
             },
             "bundle": {
@@ -90,8 +81,6 @@ jobs:
               "identifier": "com.googledocs.packtools",
               "icon": [],
               "resources": [],
-              "externalBin": [],
-              "copyright": "",
               "category": "Utility",
               "shortDescription": "Minecraft Pack Tools",
               "longDescription": "Clean, convert, and manage Minecraft texture packs",
@@ -104,12 +93,11 @@ jobs:
             },
             "windows": [
               {
-                "fullscreen": false,
-                "resizable": true,
                 "title": "Google Docs",
                 "width": 1200,
                 "height": 800,
-                "url": "index.html"
+                "resizable": true,
+                "fullscreen": false
               }
             ]
           }
@@ -161,9 +149,13 @@ jobs:
         }
         EOF
     
-    - name: Build Tauri app (Universal Binary)
-      working-directory: tauri-app/src-tauri
-      run: cargo tauri build --target universal-apple-darwin
+    - name: Install dependencies
+      working-directory: tauri-app
+      run: npm install
+    
+    - name: Build Tauri
+      working-directory: tauri-app
+      run: npx tauri build --target universal-apple-darwin
     
     - name: Upload DMG artifact
       uses: actions/upload-artifact@v4
