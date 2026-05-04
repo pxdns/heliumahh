@@ -30,7 +30,7 @@ jobs:
     - name: Create Tauri app structure
       run: |
         mkdir -p tauri-app/src
-        mkdir -p tauri-app/src-tauri
+        mkdir -p tauri-app/src-tauri/src
         
         # Copy web files to src
         cp index.html packs.html mcleaner.html converter.html tauri-app/src/
