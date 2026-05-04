@@ -19,181 +19,155 @@ jobs:
       with:
         node-version: '20'
     
-    - name: Install dependencies
-      run: npm install -g electron electron-builder
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: aarch64-apple-darwin,x86_64-apple-darwin
     
-    - name: Create Electron app structure
+    - name: Install Tauri CLI
+      run: cargo install tauri-cli
+    
+    - name: Create Tauri app structure
       run: |
-        mkdir -p electron-app/vendor electron-app/packs
-        # Copy necessary files
-        cp index.html packs.html mcleaner.html converter.html electron-app/ 2>/dev/null || true
-        cp styles.css theme.js nav.js packs.js mcleaner.js electron-app/ 2>/dev/null || true
-        # Copy packs folder - needed for downloads
-        cp -r packs/*.zip electron-app/packs/ 2>/dev/null || true
-        # Copy vendor files if they exist
-        if [ -d "vendor" ]; then
-          cp -r vendor electron-app/ 2>/dev/null || true
-        fi
+        mkdir -p tauri-app/src
+        mkdir -p tauri-app/src-tauri
         
+        # Copy web files to src
+        cp index.html packs.html mcleaner.html converter.html tauri-app/src/
+        cp styles.css theme.js nav.js packs.js mcleaner.js tauri-app/src/
+        cp -r packs tauri-app/src/ 2>/dev/null || true
+        cp -r vendor tauri-app/src/ 2>/dev/null || true
+    
     - name: Create package.json
       run: |
-        cat > electron-app/package.json << 'EOF'
+        cat > tauri-app/package.json << 'EOF'
         {
           "name": "google-docs",
           "version": "1.0.0",
           "description": "Minecraft Pack Tools",
-          "main": "electron-main.js",
-          "author": "Google Docs",
           "scripts": {
-            "start": "electron .",
-            "build": "electron-builder --mac"
-          },
+            "tauri": "tauri"
+          }
+        }
+        EOF
+    
+    - name: Create Tauri config
+      run: |
+        cat > tauri-app/src-tauri/tauri.conf.json << 'EOF'
+        {
           "build": {
-            "appId": "com.googledocs.packtools",
+            "beforeDevCommand": "",
+            "beforeBuildCommand": "",
+            "devPath": "../src",
+            "distDir": "../src"
+          },
+          "package": {
             "productName": "Google Docs",
-            "mac": {
-              "category": "public.app-category.utilities",
-              "target": [
-                {
-                  "target": "dmg",
-                  "arch": ["x64", "arm64"]
-                }
-              ],
-              "minimumSystemVersion": "10.13"
-            },
-            "dmg": {
-              "title": "Google Docs",
+            "version": "1.0.0"
+          },
+          "tauri": {
+            "allowlist": {
+              "all": false,
+              "shell": {
+                "all": false,
+                "open": true
+              },
               "window": {
-                "width": 540,
-                "height": 380
+                "all": false,
+                "close": true,
+                "hide": true,
+                "show": true,
+                "maximize": true,
+                "minimize": true,
+                "unmaximize": true,
+                "unminimize": true,
+                "startDragging": true
               }
             },
-            "files": [
-              "electron-main.js",
-              "*.html",
-              "*.css",
-              "*.js",
-              "vendor/**/*",
-              "packs/**/*.zip",
-              "!node_modules/**/*",
-              "!.git/**/*",
-              "!.github/**/*",
-              "!.vscode/**/*",
-              "!*.md"
-            ],
-            "asarUnpack": [
-              "packs/**/*.zip"
-            ],
-            "compression": "maximum",
-            "electronCompile": false,
-            "removePackageScripts": true,
-            "npmRebuild": false
-          },
-          "devDependencies": {
-            "electron": "^28.0.0",
-            "electron-builder": "^24.9.1"
-          }
-        }
-        EOF
-    
-    - name: Create Electron main file
-      run: |
-        cat > electron-app/electron-main.js << 'EOF'
-        const { app, BrowserWindow } = require('electron');
-        const path = require('path');
-
-        function createWindow() {
-          const win = new BrowserWindow({
-            width: 1200,
-            height: 800,
-            webPreferences: {
-              nodeIntegration: false,
-              contextIsolation: true
+            "bundle": {
+              "active": true,
+              "targets": ["dmg"],
+              "identifier": "com.googledocs.packtools",
+              "icon": [],
+              "resources": [],
+              "externalBin": [],
+              "copyright": "",
+              "category": "Utility",
+              "shortDescription": "Minecraft Pack Tools",
+              "longDescription": "Clean, convert, and manage Minecraft texture packs",
+              "macOS": {
+                "minimumSystemVersion": "10.13"
+              }
             },
-            titleBarStyle: 'hiddenInset'
-          });
-
-          win.loadFile('index.html');
-          
-          // Handle navigation to other pages
-          win.webContents.on('will-navigate', (event, url) => {
-            event.preventDefault();
-            
-            // Check if it's an external URL
-            if (url.startsWith('http://') || url.startsWith('https://')) {
-              // Load external URLs in the same window
-              win.loadURL(url);
-            } else if (url.includes('/packs')) {
-              win.loadFile('packs.html');
-            } else if (url.includes('/mcleaner')) {
-              win.loadFile('mcleaner.html');
-            } else if (url.includes('/converter')) {
-              win.loadFile('converter.html');
-            } else if (url.includes('/') || url.includes('index')) {
-              win.loadFile('index.html');
-            }
-          });
-          
-          // Handle link clicks
-          win.webContents.setWindowOpenHandler(({ url }) => {
-            // Load external links in the same window
-            if (url.startsWith('http://') || url.startsWith('https://')) {
-              win.loadURL(url);
-              return { action: 'deny' };
-            }
-            
-            if (url.includes('/packs')) {
-              win.loadFile('packs.html');
-            } else if (url.includes('/mcleaner')) {
-              win.loadFile('mcleaner.html');
-            } else if (url.includes('/converter')) {
-              win.loadFile('converter.html');
-            } else if (url.includes('/') || url.includes('index')) {
-              win.loadFile('index.html');
-            }
-            return { action: 'deny' };
-          });
-          
-          // Handle keyboard shortcuts
-          win.webContents.on('before-input-event', (event, input) => {
-            // Option+B or Alt+B to go back to index
-            if (input.alt && input.key === 'b') {
-              win.loadFile('index.html');
-            }
-          });
-        }
-
-        app.whenReady().then(() => {
-          createWindow();
-
-          app.on('activate', () => {
-            if (BrowserWindow.getAllWindows().length === 0) {
-              createWindow();
-            }
-          });
-        });
-
-        app.on('window-all-closed', () => {
-          if (process.platform !== 'darwin') {
-            app.quit();
+            "security": {
+              "csp": null
+            },
+            "windows": [
+              {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "Google Docs",
+                "width": 1200,
+                "height": 800,
+                "url": "index.html"
+              }
+            ]
           }
-        });
+        }
         EOF
     
-    - name: Install app dependencies
-      working-directory: electron-app
-      run: npm install
+    - name: Create Cargo.toml
+      run: |
+        cat > tauri-app/src-tauri/Cargo.toml << 'EOF'
+        [package]
+        name = "google-docs"
+        version = "1.0.0"
+        description = "Minecraft Pack Tools"
+        authors = ["Google Docs"]
+        license = ""
+        repository = ""
+        edition = "2021"
+
+        [build-dependencies]
+        tauri-build = { version = "1.5", features = [] }
+
+        [dependencies]
+        tauri = { version = "1.5", features = ["shell-open"] }
+        serde = { version = "1.0", features = ["derive"] }
+        serde_json = "1.0"
+
+        [features]
+        default = ["custom-protocol"]
+        custom-protocol = ["tauri/custom-protocol"]
+        EOF
     
-    - name: Build macOS app
-      working-directory: electron-app
-      run: npm run build
-      env:
-        CSC_IDENTITY_AUTO_DISCOVERY: false
-        DEBUG: electron-builder
+    - name: Create build.rs
+      run: |
+        cat > tauri-app/src-tauri/build.rs << 'EOF'
+        fn main() {
+          tauri_build::build()
+        }
+        EOF
+    
+    - name: Create main.rs
+      run: |
+        cat > tauri-app/src-tauri/src/main.rs << 'EOF'
+        #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+        fn main() {
+          tauri::Builder::default()
+            .run(tauri::generate_context!())
+            .expect("error while running tauri application");
+        }
+        EOF
+    
+    - name: Build Tauri app (Universal Binary)
+      working-directory: tauri-app/src-tauri
+      run: cargo tauri build --target universal-apple-darwin
     
     - name: Upload DMG artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-dmg
-        path: electron-app/dist/*.dmg
+        path: tauri-app/src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
         retention-days: 30
