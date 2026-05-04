@@ -25,11 +25,15 @@ jobs:
     - name: Create Electron app structure
       run: |
         mkdir -p electron-app/vendor
-        cp -r *.html *.js *.css packs vendor electron-app/ 2>/dev/null || true
+        # Only copy necessary files
+        cp index.html packs.html mcleaner.html converter.html electron-app/ 2>/dev/null || true
+        cp styles.css theme.js nav.js packs.js mcleaner.js electron-app/ 2>/dev/null || true
         # Copy vendor files if they exist
         if [ -d "vendor" ]; then
-          cp -r vendor/* electron-app/vendor/ 2>/dev/null || true
+          cp -r vendor electron-app/ 2>/dev/null || true
         fi
+        # Don't copy packs folder - it's huge and not needed in the app
+        echo "Skipping packs folder to reduce app size"
         
     - name: Create package.json
       run: |
@@ -68,8 +72,8 @@ jobs:
               "*.html",
               "*.css",
               "*.js",
-              "packs/**/*",
               "vendor/**/*",
+              "!packs/**/*",
               "!node_modules/**/*",
               "!.git/**/*",
               "!.github/**/*",
@@ -77,7 +81,8 @@ jobs:
               "!*.md"
             ],
             "asarUnpack": [],
-            "compression": "maximum"
+            "compression": "maximum",
+            "electronCompile": false
           },
           "devDependencies": {
             "electron": "^28.0.0",
