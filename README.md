@@ -26,6 +26,19 @@ Download the latest DMG from the [Actions](../../actions) tab (look for the late
 3. Drag "Google Docs" to Applications
 4. Launch from Applications folder
 
+## Actually using the app
+If, you are like me or any one else from our school (those who know) you will struggle and encounter errors such as macos gatekeeper going nuts because im not paying 99 dollars a year for an apple developer license. so here:
+ 1. open the dmg file, then select it with your cursor by using left click then cmd + c
+ 2. Go to /Downloads folder then cmd v
+ 3. then after that do this command:
+        1. xattr -dr com.apple.quarantine  <img width="351" height="196" alt="image" src="https://github.com/user-attachments/assets/c24e257c-57a0-4dd9-b233-89eed95d11a5" /> after-> <img width="260" height="495" alt="Screen Shot 2026-05-04 at 7 13 11 pm" src="https://github.com/user-attachments/assets/16a6ea24-d41e-4fdd-a1cf-4774a1627b59" /> (copy the stuff in the green box)
+        2. then after :
+        hdiutil create -volname "googledocs" \
+        -srcfolder "./directory to app( CHANGE BEFORE COPYING)" \
+        -ov -format UDZO \
+        ~/Downloads/googledocs.dmg
+  
+
 ## Building from Source
 
 The app is automatically built via GitHub Actions on every push to main. The workflow:
