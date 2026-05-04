@@ -141,7 +141,30 @@ let removedFilesList = [];
 function isJunkFile(filename, aggressive = false) {
     const lowerName = filename.toLowerCase();
     
-    // Check against all patterns
+    // NEVER remove Minecraft resource pack files
+    const minecraftExtensions = [
+        '.png', '.json', '.mcmeta', '.txt', '.properties', 
+        '.ogg', '.mus', '.fsh', '.vsh', '.glsl',
+        '.mcfunction', '.nbt', '.dat'
+    ];
+    
+    // Check if it's a Minecraft file - KEEP IT
+    for (const ext of minecraftExtensions) {
+        if (lowerName.endsWith(ext)) return false;
+    }
+    
+    // Check if it's in a Minecraft folder - KEEP IT
+    const minecraftFolders = [
+        'assets/', 'data/', 'textures/', 'models/', 'sounds/',
+        'blockstates/', 'font/', 'shaders/', 'optifine/',
+        'particles/', 'texts/', 'lang/'
+    ];
+    
+    for (const folder of minecraftFolders) {
+        if (lowerName.includes(folder)) return false;
+    }
+    
+    // Check against junk patterns
     for (const pattern of ALL_JUNK_PATTERNS) {
         if (pattern.includes('*')) {
             // Wildcard pattern

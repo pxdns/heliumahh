@@ -24,8 +24,12 @@ jobs:
     
     - name: Create Electron app structure
       run: |
-        mkdir -p electron-app
-        cp -r *.html *.js *.css packs electron-app/ 2>/dev/null || true
+        mkdir -p electron-app/vendor
+        cp -r *.html *.js *.css packs vendor electron-app/ 2>/dev/null || true
+        # Copy vendor files if they exist
+        if [ -d "vendor" ]; then
+          cp -r vendor/* electron-app/vendor/ 2>/dev/null || true
+        fi
         
     - name: Create package.json
       run: |
@@ -65,6 +69,7 @@ jobs:
               "*.css",
               "*.js",
               "packs/**/*",
+              "vendor/**/*",
               "!node_modules/**/*",
               "!.git/**/*",
               "!.github/**/*",
